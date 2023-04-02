@@ -12,8 +12,8 @@ export class ChangelogService {
   constructor(private http: HttpClient) {
   }
 
-  loadChangelog(): Observable<Changelog> {
-    return this.http.get<Changelog>(`${this.apiUrl}/changelog`);
+  loadChangelog(): Observable<string> {
+    return this.http.get(`${this.apiUrl}/changelog`,{ responseType: 'text' });
   }
 
   addEntry(entry: string): Observable<any> {

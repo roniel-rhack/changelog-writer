@@ -5,7 +5,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'app-changelog-create',
   templateUrl: './changelog-create.component.html',
-  styleUrls: ['./changelog-create.component.css']
+  styleUrls: ['./changelog-create.component.scss']
 })
 export class ChangelogCreateComponent {
 
@@ -40,6 +40,7 @@ export class ChangelogCreateComponent {
       this.changelogService.addVersion(this.form.value).subscribe(response => {
         // Handle success
         console.log('Version added:', response);
+        window.location.reload();
       }, error => {
         // Handle error
         console.error('Error adding version:', error);

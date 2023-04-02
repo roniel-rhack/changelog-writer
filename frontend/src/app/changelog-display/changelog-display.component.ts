@@ -4,7 +4,7 @@ import {ChangelogService} from "../services/changelog.service";
 @Component({
   selector: 'app-changelog-display',
   templateUrl: './changelog-display.component.html',
-  styleUrls: ['./changelog-display.component.css']
+  styleUrls: ['./changelog-display.component.scss']
 })
 export class ChangelogDisplayComponent implements OnInit {
   changelogMarkdown: string;
@@ -18,9 +18,7 @@ export class ChangelogDisplayComponent implements OnInit {
 
   loadChangelog(): void {
     this.changelogService.loadChangelog().subscribe(changelog => {
-      // convert changelog to text
-      this.changelogMarkdown = JSON.stringify(changelog);
-
+      this.changelogMarkdown = changelog;
     });
   }
 }

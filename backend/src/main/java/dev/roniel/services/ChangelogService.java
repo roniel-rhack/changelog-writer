@@ -33,6 +33,10 @@ public class ChangelogService {
     public static final String LINE_BREAK = "\n";
     private final ChangelogConfig changelogConfig;
 
+    public String getChangelogFile() throws IOException {
+        return Files.readString(Path.of(changelogConfig.getReadPath()), StandardCharsets.UTF_8);
+    }
+
     public Changelog parseChangelog() throws IOException {
         String content = Files.readString(Path.of(changelogConfig.getReadPath()), StandardCharsets.UTF_8);
         Parser parser = Parser.builder().build();

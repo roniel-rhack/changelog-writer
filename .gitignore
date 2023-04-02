@@ -4,6 +4,7 @@
 /node/
 /frontend/node/
 /frontend/target/
+/frontend/.angular/
 /.idea/
 
 

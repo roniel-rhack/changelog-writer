@@ -37,8 +37,8 @@ public class ChangelogController {
     }
 
     @GetMapping(value = "/changelog")
-    public ResponseEntity<Changelog> getChangelog() throws IOException {
-        return ResponseEntity.ok(changelogService.parseChangelog());
+    public ResponseEntity<String> getChangelog() throws IOException {
+        return ResponseEntity.ok(changelogService.getChangelogFile());
     }
 
     @Data
