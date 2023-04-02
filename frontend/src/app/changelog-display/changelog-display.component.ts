@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ChangelogService} from "../services/changelog.service";
+import {ChangelogService} from '../services/changelog.service';
 
 @Component({
   selector: 'app-changelog-display',

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ChangelogService} from "../services/changelog.service";
+import {ChangelogService} from '../services/changelog.service';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Changelog} from "../changelog-display/changelog.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +17,7 @@ export class ChangelogService {
 
   addEntry(entry: string): Observable<any> {
     const url = `${this.apiUrl}/changelog/add`;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     headers.append('Access-Control-Allow-Origin', '*');
     const requestBody = {entry};
