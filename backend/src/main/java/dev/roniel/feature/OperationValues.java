@@ -1,4 +1,4 @@
-package dev.marco.example.springboot.feature;
+package dev.roniel.feature;
 
 public class OperationValues {
     private Integer valueA;

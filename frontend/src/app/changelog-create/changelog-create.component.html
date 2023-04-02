@@ -1,0 +1,33 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="version">Version:</label>
+    <input id="version" formControlName="version" type="text" required>
+    <label for="releaseDate">Release date:</label>
+    <input id="releaseDate" formControlName="releaseDate" type="date" required>
+  </div>
+
+  <div formArrayName="changes" *ngFor="let change of changes.controls; index as i">
+    <div [formGroupName]="i">
+      <label for="type-{{i}}">Type:</label>
+      <select id="type-{{i}}" formControlName="type" required>
+        <option value="">Select type</option>
+        <option value="added">Added</option>
+        <option value="changed">Changed</option>
+        <option value="fixed">Fixed</option>
+        <option value="removed">Removed</option>
+      </select>
+
+      <label for="description-{{i}}">Description:</label>
+      <input id="description-{{i}}" formControlName="description" type="text" required>
+
+      <label for="usNumber-{{i}}">US number:</label>
+      <input id="usNumber-{{i}}" formControlName="usNumber" type="text" placeholder="US number">
+
+      <button type="button" (click)="removeChange(i)">Remove change</button>
+    </div>
+  </div>
+
+  <button type="button" (click)="addChange()">Add change</button>
+  <button type="submit">Submit</button>
+</form>
+

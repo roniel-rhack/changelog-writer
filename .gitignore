@@ -3,6 +3,7 @@
 /frontend/bin/
 /node/
 /frontend/node/
+/frontend/target/
 /.idea/
 
 

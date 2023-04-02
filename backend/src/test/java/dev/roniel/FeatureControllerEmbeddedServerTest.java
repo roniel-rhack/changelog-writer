@@ -1,4 +1,4 @@
-package dev.marco.example.springboot;
+package dev.roniel;
 
 /**
  *  * We didn't implement the version with the RestTemplate because spring doesn't like GET requests with body.
