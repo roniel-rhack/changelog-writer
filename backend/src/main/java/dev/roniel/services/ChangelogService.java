@@ -3,6 +3,7 @@ package dev.roniel.services;
 import com.vladsch.flexmark.ast.BulletList;
 import com.vladsch.flexmark.ast.BulletListItem;
 import com.vladsch.flexmark.ast.Heading;
+import com.vladsch.flexmark.ast.Paragraph;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.ast.Node;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
@@ -22,6 +23,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,30 +45,37 @@ public class ChangelogService {
         Node document = parser.parse(content);
 
         Changelog changelog = new Changelog();
-        List<Version> versions = new ArrayList<>();
+        LinkedList<Version> versions = new LinkedList<>();
         Version currentVersion = null;
         ChangeType currentChangeType = null;
 
         for (Node node : document.getChildren()) {
-            if (node instanceof Heading) {
-                String headingText = ((Heading) node).getText().toString();
-
-                if (isVersionHeading(headingText)) {
-                    if (currentVersion != null) {
-                        versions.add(currentVersion);
-                    }
-                    currentVersion = parseVersion(headingText);
+            if (node instanceof Heading node1) {
+                String headingText = node1.getText().toString();
+                if (node1.getLevel() == 1) {
+                    changelog.setTitle(headingText);
                 } else {
-                    currentChangeType = parseChangeType(headingText);
-                }
-            } else if (node instanceof BulletList) {
-                if (currentVersion != null && currentChangeType != null) {
-                    for (Node item : node.getChildren()) {
-                        if (item instanceof BulletListItem) {
-                            BasedSequence listItemText = item.getFirstChild().getChars();
-                            Change change = parseChange(listItemText, currentChangeType);
-                            currentVersion.getChanges().add(change);
+                    if (isVersionHeading(headingText)) {
+                        if (currentVersion != null) {
+                            versions.add(currentVersion);
                         }
+                        currentVersion = parseVersion(headingText);
+                    } else {
+                        currentChangeType = parseChangeType(headingText);
+                    }
+                }
+            } else if (node instanceof Paragraph node1) {
+                String changelogDescription = changelog.getDescription();
+                String description1 = changelogDescription != null && !changelogDescription.equals(
+                        "") ? changelogDescription + LINE_BREAK : "";
+                String description = description1 + node1.getChars();
+                changelog.setDescription(description);
+            } else if (node instanceof BulletList && (currentVersion != null && currentChangeType != null)) {
+                for (Node item : node.getChildren()) {
+                    if (item instanceof BulletListItem) {
+                        BasedSequence listItemText = item.getFirstChild().getChars();
+                        Change change = parseChange(listItemText, currentChangeType);
+                        currentVersion.getChanges().add(change);
                     }
                 }
             }
@@ -129,7 +138,6 @@ public class ChangelogService {
         return null;
     }
 
-
     private String parseUSNumber(String description) {
         Pattern issuePattern = Pattern.compile("\\((.+)\\)\\.?\\s*$");
         Matcher issueMatcher = issuePattern.matcher(description);
@@ -142,31 +150,33 @@ public class ChangelogService {
     public void writeChangelog(Changelog changelog) throws IOException {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("# Changelog")
-                .append(LINE_BREAK)
+        sb.append("# ")
                 .append(changelog.getTitle())
                 .append(LINE_BREAK)
                 .append(changelog.getDescription())
-                .append(LINE_BREAK)
                 .append(LINE_BREAK);
         for (Version version : changelog.getVersions()) {
-            sb.append("## [").append(version.getVersion()).append("] - ").append(version.getReleaseDate()).append(LINE_BREAK);
+            sb.append("## [").append(version.getVersion()).append("] - ").append(version.getReleaseDate()).append(
+                    LINE_BREAK);
             for (ChangeType changeType : ChangeType.values()) {
                 List<Change> changesOfType = filterChangesByType(version.getChanges(), changeType);
                 if (!changesOfType.isEmpty()) {
                     sb.append("### ").append(changeType).append(LINE_BREAK);
                     for (Change change : changesOfType) {
                         sb.append("- ").append(change.getDescription());
-                        if (change.getUsNumber() != null) {
-                               sb.append(" (").append(change.getUsNumber()).append(")");
+                        if (change.getUsNumber() != null && !"".equals(
+                                change.getUsNumber()) && !change.getDescription().contains("US")) {
+                            sb.append(" (").append(change.getUsNumber()).append(")");
                         }
                         sb.append(LINE_BREAK);
                     }
                 }
             }
+            sb.append(LINE_BREAK);
         }
 
-        Files.writeString(Path.of(changelogConfig.getWritePath()), sb.toString(), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+        Files.writeString(Path.of(changelogConfig.getWritePath()), sb.toString(), StandardCharsets.UTF_8,
+                StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     private List<Change> filterChangesByType(List<Change> changes, ChangeType changeType) {
@@ -179,7 +189,6 @@ public class ChangelogService {
         return filteredChanges;
     }
 
-
     public void addVersion(Version version) throws IOException {
         Changelog changelog = parseChangelog();
 
@@ -187,6 +196,5 @@ public class ChangelogService {
 
         writeChangelog(changelog);
     }
-
 }
 

@@ -2,15 +2,15 @@ package dev.roniel.models;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.LinkedList;
 
 @Data
 public class Changelog {
     private String title;
     private String description;
-    private List<Version> versions;
+    private LinkedList<Version> versions;
 
     public void addVersion(Version version) {
-        versions.add(version);
+        versions.add(0, version);
     }
 }
