@@ -1,4 +1,15 @@
 body {
   height: fit-content(80%);
 }
+.svg-icon {
+}
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}
 

@@ -9,10 +9,10 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class ChangelogCreateComponent {
 
-  form: FormGroup;
+  createForm: FormGroup;
 
   constructor(private fb: FormBuilder, private changelogService: ChangelogService) {
-    this.form = this.fb.group({
+    this.createForm = this.fb.group({
       version: ['', Validators.required],
       releaseDate: ['', Validators.required],
       changes: this.fb.array([])
@@ -20,7 +20,7 @@ export class ChangelogCreateComponent {
   }
 
   get changes(): FormArray {
-    return this.form.get('changes') as FormArray;
+    return this.createForm.get('changes') as FormArray;
   }
 
   addChange() {
@@ -36,8 +36,8 @@ export class ChangelogCreateComponent {
   }
 
   onSubmit() {
-    if (this.form.valid) {
-      this.changelogService.addVersion(this.form.value).subscribe(response => {
+    if (this.createForm.valid) {
+      this.changelogService.addVersion(this.createForm.value).subscribe(response => {
         // Handle success
         console.log('Version added:', response);
         window.location.reload();

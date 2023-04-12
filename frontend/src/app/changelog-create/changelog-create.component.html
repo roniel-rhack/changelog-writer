@@ -1,12 +1,20 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="mt-4">
+<form [formGroup]="createForm" (ngSubmit)="onSubmit()" class="mt-4" #form="ngForm">
   <div class="row">
     <div class="col-md-6">
       <label for="version" class="form-label">Version:</label>
       <input id="version" formControlName="version" type="text" class="form-control" required>
+      <div class="text-danger" *ngIf=" (createForm.controls.version.dirty || form.submitted) &&
+    !createForm.controls.version.valid">
+        Version cannot be empty!
+      </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-4">
       <label for="releaseDate" class="form-label">Release date:</label>
       <input id="releaseDate" formControlName="releaseDate" type="date" class="form-control" required>
+      <div class="text-danger" *ngIf=" (createForm.controls.releaseDate.dirty || form.submitted) &&
+    !createForm.controls.releaseDate.valid">
+        Release Date cannot be empty!
+      </div>
     </div>
   </div>
   <br/>
@@ -34,10 +42,13 @@
           <label for="usNumber-{{i}}" class="form-label">US number:</label>
           <input id="usNumber-{{i}}" formControlName="usNumber" type="text" class="form-control" placeholder="US number">
         </div>
-
         <div class="d-flex align-items-end">
           <button type="button" class="btn btn-danger mt-2" (click)="removeChange(i)">Remove change</button>
         </div>
+      </div>
+      <div class="text-danger" *ngIf=" (change.dirty || form.submitted) &&
+    !change.valid">
+        Please complete the change!
       </div>
     </ng-container>
   </div>
